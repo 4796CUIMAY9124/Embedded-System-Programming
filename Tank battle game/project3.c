@@ -1,9 +1,3 @@
-//*****************************************************************************
-//
-// project0.c - Example to demonstrate minimal TivaWare setup
-
-//*****************************************************************************
-
 #include <stdint.h>
 #include <stdbool.h>
 #include "inc/hw_types.h"
@@ -24,18 +18,18 @@
 #include "inc/tm4c1294ncpdt.h"
 #include "12864.h"
 
-/////////////////È«¾Ö±äÁ¿/////////////////////////////////////
+/////////////////å…¨å±€å˜é‡/////////////////////////////////////
 uint32_t ui32SysClock;
-int KeyTemp;//¼üÅÌÉ¨ÃèÖµ
-int value;//Êµ¼ÊÖµ
-int u=0,d=0,l=0,r=0;//ÉÏÏÂ×óÓÒ
+int KeyTemp;//é”®ç›˜æ‰«æå€¼
+int value;//å®é™…å€¼
+int u=0,d=0,l=0,r=0;//ä¸Šä¸‹å·¦å³
 int dir;//
-int x=0,y=0;//ÒÆ¶¯Öµ x=r-l;y=u-d;
-int b=0;//ÅÚµ¯,Ä¬ÈÏ²»¿ª,=0
-int i,j,k=0;//Í¨ÓÃ¼ÆÊı
-int flag=0;//ÓÃÀ´±ê×¢bombÊÇ·ñ³õÊ¼»¯£¬1ÒÑ¾­³õÊ¼»¯
-int flag0=0;//flag0=1£¬ÅÚµ¯Ã»ÓĞ³ö¿ò£¬flag=0£¬ÅÚµ¯³ö¿ò
-int hand=0;//ÓÃÀ´±ê×¢ÊÇ·ñ°´ÏÂÎå
+int x=0,y=0;//ç§»åŠ¨å€¼ x=r-l;y=u-d;
+int b=0;//ç‚®å¼¹,é»˜è®¤ä¸å¼€,=0
+int i,j,k=0;//é€šç”¨è®¡æ•°
+int flag=0;//ç”¨æ¥æ ‡æ³¨bombæ˜¯å¦åˆå§‹åŒ–ï¼Œ1å·²ç»åˆå§‹åŒ–
+int flag0=0;//flag0=1ï¼Œç‚®å¼¹æ²¡æœ‰å‡ºæ¡†ï¼Œflag=0ï¼Œç‚®å¼¹å‡ºæ¡†
+int hand=0;//ç”¨æ¥æ ‡æ³¨æ˜¯å¦æŒ‰ä¸‹äº”
 
 extern unsigned char bomb[];
 
@@ -49,108 +43,120 @@ __error__(char *pcFilename, uint32_t ui32Line)
 }
 #endif
 
-//*************************º¯ÊıÇø**************************************
+//*************************å‡½æ•°åŒº**************************************
 
-void getvalue(KeyTemp){
-    switch(KeyTemp){
-           case 8: {// 2
-               value=2;
-               u+=1;//up
-               dir=2;
-           break; }
-           case 13: {// 4
-               value=4;
-               l+=1;
-               dir=4;
-               break;
+void getvalue(KeyTemp)
+{
+    switch(KeyTemp)
+    {
+        case 8: 
+            {// 2
+                value=2;
+                u+=1;//up
+                dir=2;
+                break; 
             }
-           case 9: {// 5
-               value=5;
-               b+=1;
-               flag0=1;
-               hand=1;//°´ÏÂ5
-               break;
-                    }
-           case 5: {// 6
-               value=6;
-               r+=1;
-               dir=6;
-               break;
-                    }
-           case 10: {// 8
-               value=8;
-               d+=1;
-               dir=8;
-               break;
-                    }
-
-           default: break;
-    }//switch
+        case 13: 
+            {// 4
+                value=4;
+                l+=1;
+                dir=4;
+                break;
+            }
+        case 9: 
+            {// 5
+                value=5;
+                b+=1;
+                flag0=1;
+                hand=1;//æŒ‰ä¸‹5
+                break;
+            }
+        case 5: 
+            {// 6
+                value=6;
+                r+=1;
+                dir=6;
+                break;
+            }
+        case 10: 
+            {// 8
+                value=8;
+                d+=1;
+                dir=8;
+                break;
+            }            
+        default: break;
+    }
     x=r-l;
     y=u-d;
-    if(!b){
+    if(!b)
+    {
         LDC_draw(dir,x,y,0);
     }
-    if(hand){//°´ÏÂ
+    if(hand)
+    {//æŒ‰ä¸‹
         changebomb();
         hand=0;
     }
-
 }
 
-void IntGPIOP0(void ){
+void IntGPIOP0(void )
+{
     uint32_t IntStatus=GPIOIntStatus(GPIO_PORTP_BASE,true);
-    if(IntStatus&GPIO_INT_PIN_2|GPIO_INT_PIN_3|GPIO_INT_PIN_4|GPIO_INT_PIN_5){
-     if ((KeyRead() & 0xF0) < 0xF0)//ÊÇ·ñÓĞ¼ü°´ÏÂ
-     {
-     check_key(); // µ÷ÓÃcheck_key(),»ñÈ¡¼üÖµ
-     }
-     KeyTemp=key_val;
-     getvalue(KeyTemp);//value
-     KeyWrite(0xF0);
-     GPIOIntClear(GPIO_PORTP_BASE,IntStatus);
-     return;
-     }
-     GPIOIntClear(GPIO_PORTP_BASE,IntStatus);
+    if(IntStatus&GPIO_INT_PIN_2|GPIO_INT_PIN_3|GPIO_INT_PIN_4|GPIO_INT_PIN_5)
+    {
+        if ((KeyRead() & 0xF0) < 0xF0)//æ˜¯å¦æœ‰é”®æŒ‰ä¸‹
+        {
+            check_key(); // è°ƒç”¨check_key(),è·å–é”®å€¼
+        }
+        KeyTemp=key_val;
+        getvalue(KeyTemp);//value
+        KeyWrite(0xF0);
+        GPIOIntClear(GPIO_PORTP_BASE,IntStatus);
+        return;
+    }
+    GPIOIntClear(GPIO_PORTP_BASE,IntStatus);
 }
 
 int
 main(void)
 {
-        //
-        // Run from the PLL at 120 MHz.
-        //
-        ui32SysClock = SysCtlClockFreqSet((SYSCTL_XTAL_25MHZ |
-                                             SYSCTL_OSC_MAIN |
-                                           SYSCTL_USE_PLL |
-                                           SYSCTL_CFG_VCO_480), 120000000);
-/////////////////////////////////////////
-
-        //ÏÔÊ¾ÆÁ
-        Lcd_init_basic();
-        //³õÊ¼»¯°´¼ü¶Ë¿ÚºÍ GPIOP µÄÖĞ¶Ï£º
-        key_init();//°üº¬³õÊ¼¡¢¼ì²é¡¢ÊÂ¼ş
-        KeyWrite(0xF0);
-        IntMasterEnable();
-        IntEnable(INT_GPIOP0);
-
-        GPIOIntTypeSet(GPIO_PORTP_BASE,GPIO_INT_PIN_2|GPIO_INT_PIN_3|GPIO_INT_PIN_4|GPIO_INT_PIN_5,GPIO_FALLING_EDGE);
-        GPIOIntClear(GPIO_PORTP_BASE,GPIO_INT_PIN_2|GPIO_INT_PIN_3|GPIO_INT_PIN_4|GPIO_INT_PIN_5);
-        GPIOIntRegister(GPIO_PORTP_BASE,IntGPIOP0);
-        GPIOIntEnable(GPIO_PORTP_BASE,GPIO_INT_PIN_2|GPIO_INT_PIN_3|GPIO_INT_PIN_4|GPIO_INT_PIN_5);
-        LDC_draw(2,0,0,false);
-        while(1){
-            if(flag0){
-                //////ÅÚµ¯
-                switch(dir){
+    //
+    // Run from the PLL at 120 MHz.
+    //
+    ui32SysClock = SysCtlClockFreqSet((SYSCTL_XTAL_25MHZ |
+                                       SYSCTL_OSC_MAIN |
+                                       SYSCTL_USE_PLL |
+                                       SYSCTL_CFG_VCO_480), 120000000);
+    //æ˜¾ç¤ºå±
+    Lcd_init_basic();
+    //åˆå§‹åŒ–æŒ‰é”®ç«¯å£å’Œ GPIOP çš„ä¸­æ–­ï¼š
+    key_init();//åŒ…å«åˆå§‹ã€æ£€æŸ¥ã€äº‹ä»¶
+    KeyWrite(0xF0);
+    IntMasterEnable();
+    IntEnable(INT_GPIOP0);
+    
+    GPIOIntTypeSet(GPIO_PORTP_BASE,GPIO_INT_PIN_2|GPIO_INT_PIN_3|GPIO_INT_PIN_4|GPIO_INT_PIN_5,GPIO_FALLING_EDGE);
+    GPIOIntClear(GPIO_PORTP_BASE,GPIO_INT_PIN_2|GPIO_INT_PIN_3|GPIO_INT_PIN_4|GPIO_INT_PIN_5);
+    GPIOIntRegister(GPIO_PORTP_BASE,IntGPIOP0);
+    GPIOIntEnable(GPIO_PORTP_BASE,GPIO_INT_PIN_2|GPIO_INT_PIN_3|GPIO_INT_PIN_4|GPIO_INT_PIN_5);
+    LDC_draw(2,0,0,false);
+    while(1)
+    {
+        if(flag0)
+        {
+            ////////////////ç‚®å¼¹///////////////
+            switch(dir)
+            {
                 case 2://up
                     {
-                        //Ö»¸ÄbombÍ¼
+                        //åªæ”¹bombå›¾
                         LDC_draw(dir, 0, 5,1);
-                        //ÑÓÊ±
+                        //å»¶æ—¶
                         delay(0.1*ui32SysClock);
 
-                        for(i=0;i<1024;i++){//flag0È«¿ÕÎª0£¬ÓĞÍ¼Îª1
+                        for(i=0;i<1024;i++)
+                        {//flag0å…¨ç©ºä¸º0ï¼Œæœ‰å›¾ä¸º1
                             if( bomb[i]!=0x00)
                             {
                                 flag0=1;
@@ -159,34 +165,38 @@ main(void)
                             flag0=0;b=0;k=0;
                         }
                            break;
-                       }
-               case 8://d
-                   {
-                       if(flag0){
-                           //Ö»¸ÄbombÍ¼
-                           LDC_draw(dir, 0,-5,1);
-                           //ÑÓÊ±
-                           delay(0.1*ui32SysClock);
-
-                           for(i=0;i<1024;i++){//flagÈ«¿ÕÎª0£¬ÓĞÍ¼Îª1
-                               if( bomb[i]!=0x00)
-                               {
-                                   flag0=1;
-                                   break;
-                               }
-                               flag0=0;b=0;k=0;
-                           }
-                       }
-                       break;
-                   }
-              case 4://l
-                  {
-                      if(flag0){
-                          //Ö»¸ÄbombÍ¼
+                    }
+                case 8://d
+                    {
+                        if(flag0)
+                        {
+                            //åªæ”¹bombå›¾
+                            LDC_draw(dir, 0,-5,1);
+                            //å»¶æ—¶
+                            delay(0.1*ui32SysClock);
+                            
+                            for(i=0;i<1024;i++)
+                            {//flagå…¨ç©ºä¸º0ï¼Œæœ‰å›¾ä¸º1
+                                if( bomb[i]!=0x00)
+                                {
+                                    flag0=1;
+                                    break;
+                                }
+                                flag0=0;b=0;k=0;
+                            }
+                        }
+                        break;
+                    }
+                case 4://l
+                    {
+                      if(flag0)
+                      {
+                          //åªæ”¹bombå›¾
                           LDC_draw(dir, -5,0,1);
-                          //ÑÓÊ±
+                          //å»¶æ—¶
                           delay(0.1*ui32SysClock);
-                          for(i=0;i<1024;i++){//flagÈ«¿ÕÎª0£¬ÓĞÍ¼Îª1
+                          for(i=0;i<1024;i++)
+                          {//flagå…¨ç©ºä¸º0ï¼Œæœ‰å›¾ä¸º1
                               if( bomb[i]!=0x00)
                               {
                                   flag0=1;
@@ -196,28 +206,30 @@ main(void)
                           }
                       }
                       break;
-                  }
-              case 6://r
-                  {
-                      if(flag0){
-                          //Ö»¸ÄbombÍ¼
-                          LDC_draw(dir, 5,0,1);
-                          //ÑÓÊ±
-                          delay(0.1*ui32SysClock);
-
-                          for(i=0;i<1024;i++){//flagÈ«¿ÕÎª0£¬ÓĞÍ¼Îª1
-                              if( bomb[i]!=0x00)
-                              {
-                                  flag0=1;
-                                  break;
-                              }
-                              flag0=0;b=0;k=0;
-                          }
-                      }
-                      break;
-                  }
-                }
-                delay(0.3*ui32SysClock);
+                    }
+                case 6://r
+                    {
+                        if(flag0)
+                        {
+                            //åªæ”¹bombå›¾
+                            LDC_draw(dir, 5,0,1);
+                            //å»¶æ—¶
+                            delay(0.1*ui32SysClock);
+                            
+                            for(i=0;i<1024;i++)
+                            {//flagå…¨ç©ºä¸º0ï¼Œæœ‰å›¾ä¸º1
+                                if( bomb[i]!=0x00)
+                                {
+                                    flag0=1;
+                                    break;
+                                }
+                                flag0=0;b=0;k=0;
+                            }
+                        }
+                        break;
+                    }
             }
-        }//while
-}//main
+            delay(0.3*ui32SysClock);
+        }
+    }
+}
