@@ -1,28 +1,3 @@
-//*****************************************************************************
-//
-// uart_echo.c - Example for reading data from and writing data to the UART in
-//               an interrupt driven fashion.
-//
-// Copyright (c) 2013-2017 Texas Instruments Incorporated.  All rights reserved.
-// Software License Agreement
-// 
-// Texas Instruments (TI) is supplying this software for use solely and
-// exclusively on TI's microcontroller products. The software is owned by
-// TI and/or its suppliers, and is protected under applicable copyright
-// laws. You may not combine this software with "viral" open-source
-// software in order to form a larger program.
-// 
-// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
-// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
-// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
-// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
-// DAMAGES, FOR ANY REASON WHATSOEVER.
-// 
-// This is part of revision 2.1.4.178 of the EK-TM4C1294XL Firmware Package.
-//
-//*****************************************************************************
-
 #include <stdint.h>
 #include <stdbool.h>
 #include "inc/hw_ints.h"
@@ -35,18 +10,6 @@
 #include "driverlib/rom_map.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/uart.h"
-
-//*****************************************************************************
-//
-//! \addtogroup example_list
-//! <h1>UART Echo (uart_echo)</h1>
-//!
-//! This example application utilizes the UART to echo text.  The first UART
-//! (connected to the USB debug virtual serial port on the evaluation board)
-//! will be configured in 115,200 baud, 8-n-1 mode.  All characters received on
-//! the UART are transmitted back to the UART.
-//
-//*****************************************************************************
 
 //****************************************************************************
 //
@@ -79,17 +42,14 @@ void
 UARTIntHandler(void)
 {
     uint32_t ui32Status;
-
     //
     // Get the interrrupt status.
     //
     ui32Status = ROM_UARTIntStatus(UART0_BASE, true);
-
     //
     // Clear the asserted interrupts.
     //
     ROM_UARTIntClear(UART0_BASE, ui32Status);
-
     //
     // Loop while there are characters in the receive FIFO.
     //
@@ -100,31 +60,26 @@ UARTIntHandler(void)
         //
         ROM_UARTCharPutNonBlocking(UART0_BASE,
                                    ROM_UARTCharGetNonBlocking(UART0_BASE));
-
         //
         // Blink the LED to show a character transfer is occuring.
         //
         GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, GPIO_PIN_0);
-
         //
         // Delay for 1 millisecond.  Each SysCtlDelay is about 3 clocks.
         //
         SysCtlDelay(g_ui32SysClock / (1000 * 3));
-
         //
         // Turn off the LED
         //
         GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, 0);
     }
 }
-
 //*****************************************************************************
 //
 // Send a string to the UART.
 //
 //*****************************************************************************
-void
-UARTSend(const uint8_t *pui8Buffer, uint32_t ui32Count)
+void UARTSend(const uint8_t *pui8Buffer, uint32_t ui32Count)
 {
     //
     // Loop while there are more characters to send.
@@ -196,50 +151,43 @@ void SHOW(){
 }
 //*****************************************************************************
 //
-// ÷–∂œ
+// ‰∏≠Êñ≠
 //
 //*****************************************************************************
-// ÷–∂œ∫Ø ˝IntGPIOj   πƒ‹º˚œ¬
+// ‰∏≠Êñ≠ÂáΩÊï∞IntGPIOj  ‰ΩøËÉΩËßÅ‰∏ã
 void IntGPIOj(void)
-         {
-         // ◊œ»≈–∂œ «ƒ«∏ˆ“˝Ω≈≤˙…˙µƒ÷–∂œ
-         if(GPIOIntStatus(GPIO_PORTJ_AHB_BASE,true)==GPIO_INT_PIN_0){
-         //—”≥Ÿ“ª∂Œ ±º‰∫Û£¨ºÏ≤È“˝Ω≈ «∑Òªπ «µÕµÁ∆Ω
-          SysCtlDelay(g_ui32SysClock/30);
-          //»Áπ˚ «µÕµÁ∆Ω£¨‘Ú∑¥◊™ ‰≥ˆ
-          if(GPIOPinRead(GPIO_PORTJ_AHB_BASE,GPIO_PIN_0)==0){//∞¥œ¬0
-              //LED1:ON, LED2:OFF
-              //UARTSend((uint8_t *)"\033[2JEnter text: ", 16);
-              /*
-              s1[0-5]//LED1:O
-              s1[6-7]//1,N''.0,FF
-              S1[8]'\0'*/
-              //≤‚ ‘”√s1[0]="t";s1[1]='c';s1[2]='\0';
-              SHOW();
-              for(i=0;i<8;i++){
-                  UARTCharPut(UART0_BASE, s1[i]);
-              }
-              for(i=0;i<8;i++){
-                                UARTCharPut(UART0_BASE, s2[i]);
-                            }
-              for(i=0;i<8;i++){
-                                UARTCharPut(UART0_BASE, s3[i]);
-                            }
-              for(i=0;i<8;i++){
-                                UARTCharPut(UART0_BASE, s4[i]);
-                            }
-
-
-          }
-         //«Â≥˝÷–∂œ£¨¿¥ ≤√¥÷–∂œæÕ«Â≥˝ ≤√¥÷–∂œ£¨≤ªƒ‹¥Ì
-         GPIOIntClear(GPIO_PORTJ_AHB_BASE,GPIO_INT_PIN_0);
-         }
-         }
-
-//*****************************************************************************
-//
-// This example demonstrates how to send a string of data to the UART.
-//
+{
+    //È¶ñÂÖàÂà§Êñ≠ÊòØÈÇ£‰∏™ÂºïËÑö‰∫ßÁîüÁöÑ‰∏≠Êñ≠
+    if(GPIOIntStatus(GPIO_PORTJ_AHB_BASE,true)==PIO_INT_PIN_0)
+    {
+        //Âª∂Ëøü‰∏ÄÊÆµÊó∂Èó¥ÂêéÔºåÊ£ÄÊü•ÂºïËÑöÊòØÂê¶ËøòÊòØ‰ΩéÁîµÂπ≥
+        SysCtlDelay(g_ui32SysClock/30);
+        //Â¶ÇÊûúÊòØ‰ΩéÁîµÂπ≥ÔºåÂàôÂèçËΩ¨ËæìÂá∫
+        if(GPIOPinRead(GPIO_PORTJ_AHB_BASE,GPIO_PIN_0)==0)
+        {
+            //Êåâ‰∏ã0
+            SHOW();
+            for(i=0;i<8;i++)
+            {
+                UARTCharPut(UART0_BASE, s1[i]);
+            }
+            for(i=0;i<8;i++)
+            {
+                UARTCharPut(UART0_BASE, s2[i]);
+            }
+            for(i=0;i<8;i++)
+            {
+                UARTCharPut(UART0_BASE, s3[i]);
+            }
+            for(i=0;i<8;i++)
+            {
+                UARTCharPut(UART0_BASE, s4[i]);
+            }
+        }
+        //Ê∏ÖÈô§‰∏≠Êñ≠ÔºåÊù•‰ªÄ‰πà‰∏≠Êñ≠Â∞±Ê∏ÖÈô§‰ªÄ‰πà‰∏≠Êñ≠
+        GPIOIntClear(GPIO_PORTJ_AHB_BASE,GPIO_INT_PIN_0);
+    }
+}
 //*****************************************************************************
 int
 main(void)
@@ -251,28 +199,27 @@ main(void)
                                              SYSCTL_OSC_MAIN |
                                              SYSCTL_USE_PLL |
                                              SYSCTL_CFG_VCO_480), 120000000);
-    //µ∆ πƒ‹ PORTN0.1   PORTF0.4
-        SysCtlPeripheralEnable(SYSCTL_PERIPH_GPION);
-        GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, GPIO_PIN_0|GPIO_PIN_1);
-        GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0|GPIO_PIN_1, 0x00);
+    //ÁÅØ‰ΩøËÉΩ PORTN0.1   PORTF0.4
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPION);
+    GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, GPIO_PIN_0|GPIO_PIN_1);
+    GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0|GPIO_PIN_1, 0x00);
+    
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
+    GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_0|GPIO_PIN_4);
+    GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0|GPIO_PIN_4, 0x00);
+    //SW1ÂàùÂßãÂåñ PORTJ
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOJ);
+    GPIOPinTypeGPIOInput(GPIO_PORTJ_AHB_BASE, GPIO_PIN_0);
+    GPIOPadConfigSet(GPIO_PORTJ_AHB_BASE,GPIO_PIN_0,GPIO_STRENGTH_2MA,GPIO_PIN_TYPE_STD_WPU);
 
-        SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
-        GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_0|GPIO_PIN_4);
-        GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0|GPIO_PIN_4, 0x00);
-       //SW1≥ı ºªØ PORTJ
-       SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOJ);
-       GPIOPinTypeGPIOInput(GPIO_PORTJ_AHB_BASE, GPIO_PIN_0);
-       GPIOPadConfigSet(GPIO_PORTJ_AHB_BASE,GPIO_PIN_0,GPIO_STRENGTH_2MA,GPIO_PIN_TYPE_STD_WPU);
-
-   //PORTJ ø™∆Ù◊‹÷–∂œ∫ÕNVIC¿ÔµƒGPIOJ÷–∂œ
+   //PORTJ ÂºÄÂêØÊÄª‰∏≠Êñ≠ÂíåNVICÈáåÁöÑGPIOJ‰∏≠Êñ≠
     IntMasterEnable();
-        IntEnable(INT_GPIOJ);
-        //≈‰÷√÷–∂œ
-        GPIOIntTypeSet(GPIO_PORTJ_AHB_BASE,GPIO_INT_PIN_0,GPIO_FALLING_EDGE);
-         GPIOIntClear(GPIO_PORTJ_AHB_BASE,GPIO_INT_PIN_0);
-         GPIOIntRegister(GPIO_PORTJ_AHB_BASE,IntGPIOj);
-         GPIOIntEnable(GPIO_PORTJ_AHB_BASE,GPIO_INT_PIN_0);
-
+    IntEnable(INT_GPIOJ);
+    //ÈÖçÁΩÆ‰∏≠Êñ≠
+    GPIOIntTypeSet(GPIO_PORTJ_AHB_BASE,GPIO_INT_PIN_0,GPIO_FALLING_EDGE);
+    GPIOIntClear(GPIO_PORTJ_AHB_BASE,GPIO_INT_PIN_0);
+    GPIOIntRegister(GPIO_PORTJ_AHB_BASE,IntGPIOj);
+    GPIOIntEnable(GPIO_PORTJ_AHB_BASE,GPIO_INT_PIN_0);
 
     //
     // Enable the GPIO port that is used for the on-board LED.
@@ -316,20 +263,14 @@ main(void)
     ROM_UARTIntEnable(UART0_BASE, UART_INT_RX | UART_INT_RT);
 
     //
-    // Prompt for text to be entered.
-    //
-    //UARTSend((uint8_t *)"\033[2JEnter text: ", 16);
-
-    //
     // Loop forever echoing data through the UART.
     //
     while(1)
     {
-        //ª˘¥°≤ø∑÷
+        //Âü∫Á°ÄÈÉ®ÂàÜ
         //PA0 R ,PA1 T
-        cThisChar = UARTCharGet(UART0_BASE);//ª˘¥°≤ø∑÷
-       // UARTCharPut(UART0_BASE, cThisChar);
-
+        cThisChar = UARTCharGet(UART0_BASE);//Âü∫Á°ÄÈÉ®ÂàÜ
+        // UARTCharPut(UART0_BASE, cThisChar);
 
         //PF4  PF0 PN1 PN0
         d0=cThisChar&0x01;
@@ -337,28 +278,32 @@ main(void)
         d2=(cThisChar&0x04)>>2;
         d3=(cThisChar&0x08)>>3;
 
-        if(d0){//d0øÿ÷∆PN0
-                    GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, GPIO_PIN_1);
-                }
+        if(d0)
+        {
+            //d0ÊéßÂà∂PN0
+            GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, GPIO_PIN_1);
+        }
         else GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, 0);
 
-        if(d1){//d1øÿ÷∆PN1
-                    GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, GPIO_PIN_0);
-                        }
+        if(d1)
+        {
+            //d1ÊéßÂà∂PN1
+            GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, GPIO_PIN_0);
+        }
         else GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, 0);
 
-        if(d2){//d2øÿ÷∆PF0
-                    GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_4, GPIO_PIN_4);
-                        }
+        if(d2)
+        {
+            //d2ÊéßÂà∂PF0
+            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_4, GPIO_PIN_4);
+        }
         else GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_4, 0);
 
-        if(d3){//d3øÿ÷∆PF4
-                    GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, GPIO_PIN_0);
-                        }
+        if(d3)
+        {
+            //d3ÊéßÂà∂PF4
+            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, GPIO_PIN_0);
+        }
         else GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, 0);
-
-
-
-
     }
 }
