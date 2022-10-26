@@ -21,8 +21,8 @@
 uint32_t g_ui32SysClock;
 int i=0;
 uint8_t de;
-uint8_t  dataBuffer[6];        //¶¨ÒåÊı×é
-int16_t x;                   //¼ÓËÙ¶È±äÁ¿16Î»
+uint8_t  dataBuffer[6];        //å®šä¹‰æ•°ç»„
+int16_t x;                   //åŠ é€Ÿåº¦å˜é‡16ä½
 int16_t y;
 int16_t z;
 uint16_t I2CState;
@@ -43,8 +43,8 @@ char sx[5];
 char sy[5];
 char sz[5];
 
-#define slaveAddress 0x53    //0x53ºÃÏñÊÇÁíÒ»¸ö¿ÉÓÃ´Ó»úµØÖ·
-#define firstRegAddress 0x32   //DATAX0µØÖ·
+#define slaveAddress 0x53    //0x53å¥½åƒæ˜¯å¦ä¸€ä¸ªå¯ç”¨ä»æœºåœ°å€
+#define firstRegAddress 0x32   //DATAX0åœ°å€
 #define devid 0x00               //
 
 
@@ -90,7 +90,7 @@ main(void)
     Lcd_init_basic();
 
 
-///////////////Ê¹ÄÜ
+///////////////ä½¿èƒ½
     SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
 
@@ -99,27 +99,27 @@ main(void)
 
     GPIOPinConfigure(GPIO_PB2_I2C0SCL);
     GPIOPinConfigure(GPIO_PB3_I2C0SDA);
-//ÉÏÀ­µç×è ÈõÉÏÀ­
+//ä¸Šæ‹‰ç”µé˜» å¼±ä¸Šæ‹‰
    // GPIOPadConfigSet(GPIO_PORTB_BASE,GPIO_PIN_2,GPIO_STRENGTH_2MA,GPIO_PIN_TYPE_STD_WPU);
    // GPIOPadConfigSet(GPIO_PORTB_BASE,GPIO_PIN_3,GPIO_STRENGTH_2MA,GPIO_PIN_TYPE_STD_WPU);
 
-    I2CMasterInitExpClk(I2C0_BASE, g_ui32SysClock, false);//Ê±ÖÓÊ¹ÄÜ
+    I2CMasterInitExpClk(I2C0_BASE, g_ui32SysClock, false);//æ—¶é’Ÿä½¿èƒ½
     I2CMasterIntClear(I2C0_BASE);//
 
-//´Ó»ú´ò¿ª&ÉèÖÃµØÖ·
+//ä»æœºæ‰“å¼€&è®¾ç½®åœ°å€
 
 
 
 
     while(1)
     {
-        //¶Á³öADXL345Ä£¿éµÄÄÚ²¿¼Ä´æÆ÷0x00(DEVID)µÄÖµ£¬ÓÃÊ¾²¨Æ÷¼ÇÂ¼SDAºÍ
-        //SCLÏßÉÏµÄ²¨ĞÎ£¬Ö¸³öSDAÉÏ´«ÊäµÄÊı¾İµÄÊ²Ã´£¬ÄÄ²¿·ÖÊÇÖ÷»ú·¢ËÍµÄ£¬ÄÄ²¿·ÖÊÇ´Ó»ú·¢ËÍµÄ
+        //è¯»å‡ºADXL345æ¨¡å—çš„å†…éƒ¨å¯„å­˜å™¨0x00(DEVID)çš„å€¼ï¼Œç”¨ç¤ºæ³¢å™¨è®°å½•SDAå’Œ
+        //SCLçº¿ä¸Šçš„æ³¢å½¢ï¼ŒæŒ‡å‡ºSDAä¸Šä¼ è¾“çš„æ•°æ®çš„ä»€ä¹ˆï¼Œå“ªéƒ¨åˆ†æ˜¯ä¸»æœºå‘é€çš„ï¼Œå“ªéƒ¨åˆ†æ˜¯ä»æœºå‘é€çš„
 
-        //ÉèÖÃDATA_FORMAT¼Ä´æÆ÷ºÍPOWER_CTL¼Ä´æÆ÷¼Ä´æÆ÷£¬¿ªÊ¼¼ÓËÙ¶ÈµÄ²âÁ¿¡£¶Á³öDATAX0¡¢DATAX1¡¢DATAY0¡¢DATAY1
-        //DATAZ0ºÍDATAZ1¼Ä´æÆ÷µÄÖµ£¬²¢×ª»»Î»XYZÖáµÄ¼ÓËÙ¶È¡£
+        //è®¾ç½®DATA_FORMATå¯„å­˜å™¨å’ŒPOWER_CTLå¯„å­˜å™¨å¯„å­˜å™¨ï¼Œå¼€å§‹åŠ é€Ÿåº¦çš„æµ‹é‡ã€‚è¯»å‡ºDATAX0ã€DATAX1ã€DATAY0ã€DATAY1
+        //DATAZ0å’ŒDATAZ1å¯„å­˜å™¨çš„å€¼ï¼Œå¹¶è½¬æ¢ä½XYZè½´çš„åŠ é€Ÿåº¦ã€‚
 
-        //°ÑXYZÈı¸ö·½ÏòµÄÖØÁ¦¼ÓËÙ¶È£¬ÏÔÊ¾ÔÚLCDÏÔÊ¾ÆÁÉÏ
+        //æŠŠXYZä¸‰ä¸ªæ–¹å‘çš„é‡åŠ›åŠ é€Ÿåº¦ï¼Œæ˜¾ç¤ºåœ¨LCDæ˜¾ç¤ºå±ä¸Š
 /*
         while(I2CMasterBusBusy(I2C0_BASE)){SysCtlDelay(400);};
          while(I2CMasterBusy(I2C0_BASE)){SysCtlDelay(400);};
@@ -166,7 +166,7 @@ main(void)
 
         while(I2CMasterBusBusy(I2C0_BASE)){SysCtlDelay(400);};
                  while(I2CMasterBusy(I2C0_BASE)){SysCtlDelay(400);};
-        //devid = HWREG(I2C0_BASE + 0x00) ;    //0x00Æ«ÒÆµØÖ·   ¶ÁÈ¡DEVID¼Ä´æÆ÷µÄÖµ
+        //devid = HWREG(I2C0_BASE + 0x00) ;    //0x00åç§»åœ°å€   è¯»å–DEVIDå¯„å­˜å™¨çš„å€¼
         //PB2 PB3 SDA SCL
         I2CMasterSlaveAddrSet(I2C0_BASE, slaveAddress, 0);
         I2CMasterDataPut(I2C0_BASE, firstRegAddress);
